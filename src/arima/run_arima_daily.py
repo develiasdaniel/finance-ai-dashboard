@@ -20,8 +20,8 @@ warnings.filterwarnings("ignore")
 # =========================
 @dataclass
 class Config:
-    output_dir: str = "outputs6/arima_daily_v2"
-    plots_dir: str = "outputs6/arima_daily_v2/plots"
+    output_dir: str = "outputs/arima_daily_v2"
+    plots_dir: str = "outputs/arima_daily_v2/plots"
     csv_path: str = "../data/processed_expense.csv"
     date_col: str = "Date"
     amount_col: str = "Expense"
@@ -134,7 +134,7 @@ def compute_metrics(y_true: np.ndarray, y_pred: np.ndarray):
 def rolling_forecast_1step(model, y_test: pd.Series, cfg: Config):
     """
     Rolling forecast 1-step: predict full test set day by day.
-    Returns predictions in original scale for ENTIRE test set.
+    Returns predictions in original scale for entire test set.
     """
     y_pred_raw_list = []
     model_rolling = deepcopy(model)
@@ -243,10 +243,10 @@ def plot_forecast_vs_actual(cfg: Config, y_test_series: pd.Series, y_pred_raw: n
                             y_test_eval_series: pd.Series = None, y_pred_eval_raw: np.ndarray = None):
     """
     Plot 2: Forecast vs Actual.
-    - If y_test_eval provided: plot only last 7 days (cleaner visualization)
+    - If y_test_eval provided: plot only last 7 days: cleaner visualization
     - If not: plot full test set
     """
-    # Use evaluation set if provided (last 7 days for clarity)
+    # Use evaluation set if provided: last 7 days for clarity
     if y_test_eval_series is not None:
         y_test_plot = y_test_eval_series
         y_pred_plot = y_pred_eval_raw
@@ -438,7 +438,7 @@ def main():
     print(f"   ✓ Train: {len(y_train)} days ({cfg.train_ratio * 100:.0f}%)")
     print(f"   ✓ Test: {len(y_test_full)} days ({(1 - cfg.train_ratio) * 100:.0f}%)")
 
-    # Evaluation subset: last 7 days (for visualization)
+    # Evaluation subset: last 7 days for visualization
     y_test_eval = y_test_full.iloc[-cfg.n_days_eval:]
     print(f"   ✓ Evaluation window: last {cfg.n_days_eval} days (for visualization)")
     print(f"   ✓ Eval date range: {y_test_eval.index.min().date()} to {y_test_eval.index.max().date()}")

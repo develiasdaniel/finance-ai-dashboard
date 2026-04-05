@@ -1,0 +1,93 @@
+C:\Users\danii\PycharmProjects\finance-ai-dashboard\.venv\Scripts\python.exe C:\Users\danii\PycharmProjects\finance-ai-dashboard\src\arima\run_arima_daily6.py 
+
+======================================================================
+         ARIMA Daily Forecasting Pipeline (Preprocessed Data)         
+======================================================================
+
+1) Loading preprocessed daily data...
+   ✓ Loaded 3591 days of data
+   Date range: 2010-01-01 to 2019-10-31
+
+2) Exploratory Data Analysis (EDA):
+   Mean daily expense: $626.30
+   Median daily expense: $623.42
+   Std Dev: $250.80
+   Min: $0.00
+   Max: $3563.15
+
+3) Preprocessing target (clip/log)...
+   ✓ Clipping: q_low=$103.70, q_high=$1262.61
+   ✓ Log1p transform applied: True
+
+4) Temporal split (80% train / 20% test)...
+   ✓ Train: 2872 days (80%)
+   ✓ Test: 719 days (20%)
+   ✓ Evaluation window: last 7 days (for visualization)
+   ✓ Eval date range: 2019-10-25 to 2019-10-31
+
+5) Training ARIMA/SARIMA with auto_arima...
+   ✓ Selected ARIMA order: (0, 0, 1)
+   ✓ Selected Seasonal order: (1, 0, 2, 7)
+   ✓ AIC: 3297.31
+
+6) Rolling forecast (1-step) on FULL TEST SET...
+   Rolling forecast 1-step (full test set):
+
+
+
+
+
+     143/719 forecasted
+
+
+
+
+
+
+     286/719 forecasted
+     429/719 forecasted
+     572/719 forecasted
+     715/719 forecasted
+
+7) Evaluating metrics on FULL TEST SET (20%)...
+   ✓ MAE: $179.97
+   ✓ RMSE: $228.77
+   ✓ MAPE: 37.51%
+
+8) Saving artifacts...
+   Model saved: outputs6/arima_daily_v2\arima_model.pkl
+   Metrics saved: outputs6/arima_daily_v2\metrics.json
+   Predictions saved: outputs6/arima_daily_v2\predictions.csv
+   Metadata saved: outputs6/arima_daily_v2\metadata.json
+
+9) Generating plots...
+   Generating EDA plots...
+     ✓ 00_eda_boxplot.png
+   Generating main plots...
+     ✓ 01_series_with_split.png
+     ✓ 02_forecast_vs_actual_full.png (full test)
+     ✓ 02_forecast_vs_actual_7days.png (zoomed view)
+     ✓ 03_residuals_full.png (full test)
+     ✓ 03_residuals_7days.png (zoomed view)
+   Generating metrics visualization...
+     ✓ 04_metrics_bar_chart.png
+     ✓ 05_metrics_table.png
+
+======================================================================
+                  ✅ Pipeline completed successfully!                  
+======================================================================
+📁 Artifacts: outputs6/arima_daily_v2
+📊 Plots: outputs6/arima_daily_v2/plots
+
+Generated plots:
+  00_eda_boxplot.png
+  01_series_with_split.png
+  02_forecast_vs_actual_full.png (metrics computed on this)
+  02_forecast_vs_actual_7days.png (zoomed visualization)
+  03_residuals_full.png
+  03_residuals_7days.png
+  04_metrics_bar_chart.png
+  05_metrics_table.png
+
+
+Process finished with exit code 0
