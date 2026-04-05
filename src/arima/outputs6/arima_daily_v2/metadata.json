@@ -1,0 +1,43 @@
+{
+  "csv_path": "../data/processed_expense.csv",
+  "n_total_points": 3591,
+  "n_train": 2872,
+  "n_test": 719,
+  "n_visualization_window": 7,
+  "train_ratio": 0.8,
+  "freq": "D",
+  "data_stats": {
+    "mean_daily_expense": 624.5720501253132,
+    "max_daily_expense": 1262.606,
+    "min_daily_expense": 103.696,
+    "std_daily_expense": 239.92881845423761
+  },
+  "clip_outliers": true,
+  "clip_q_low": 0.01,
+  "clip_q_high": 0.99,
+  "clip_info": {
+    "q_low_value": 103.696,
+    "q_high_value": 1262.606
+  },
+  "use_log1p": true,
+  "seasonal": true,
+  "m": 7,
+  "selected_order": [
+    0,
+    0,
+    1
+  ],
+  "selected_seasonal_order": [
+    1,
+    0,
+    2,
+    7
+  ],
+  "forecast_method": "rolling_1step",
+  "metrics_evaluated_on": "full_test_set",
+  "metrics": {
+    "mae": 179.97317172178793,
+    "rmse": 228.77008269031936,
+    "mape": 37.511705408157134
+  }
+}

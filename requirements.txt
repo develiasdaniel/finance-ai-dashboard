@@ -1,3 +1,7 @@
+scikit-learn
+pmdarima
+joblib
+matplotlib
 streamlit>=1.32.0
 pandas>=2.0.0
 numpy>=1.24.0
