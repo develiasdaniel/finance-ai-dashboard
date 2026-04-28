@@ -26,6 +26,10 @@ class Config:
     date_col: str = "Date"
     amount_col: str = "Expense"
 
+    #csv_path: str = "../data/output_user_86.csv"
+    #date_col: str = "date_day"
+    #amount_col: str = "total_amount"
+
     # daily frequency
     freq: str = "D"
 
@@ -33,12 +37,12 @@ class Config:
     train_ratio: float = 0.8
 
     # evaluation: last N days
-    n_days_eval: int = 7
+    n_days_eval: int = 20
 
     # outlier handling (recommended for daily data)
     clip_outliers: bool = True
     clip_q_low: float = 0.01
-    clip_q_high: float = 0.99
+    clip_q_high: float = 0.95
 
     # transformation
     use_log1p: bool = True
@@ -67,6 +71,8 @@ def load_preprocessed_daily(cfg: Config) -> pd.DataFrame:
 
     # Sort by date
     df = df.sort_values(cfg.date_col).reset_index(drop=True)
+    print("sorted")
+    print(df[:20])
 
     # Create series with date index
     daily = df.set_index(cfg.date_col)[[cfg.amount_col]].copy()
@@ -120,15 +126,10 @@ def inverse_transform(pred_model: np.ndarray, cfg: Config):
 
 
 def compute_metrics(y_true: np.ndarray, y_pred: np.ndarray):
-    """MAE, RMSE, MAPE."""
+    """MAE, RMSE"""
     mae = mean_absolute_error(y_true, y_pred)
     rmse = np.sqrt(mean_squared_error(y_true, y_pred))
-
-    # MAPE robust to zeros
-    eps = 1e-8
-    mape = np.mean(np.abs((y_true - y_pred) / np.maximum(np.abs(y_true), eps))) * 100.0
-
-    return {"mae": float(mae), "rmse": float(rmse), "mape": float(mape)}
+    return {"mae": float(mae), "rmse": float(rmse)}
 
 
 def rolling_forecast_1step(model, y_test: pd.Series, cfg: Config):
@@ -335,17 +336,16 @@ def plot_residuals(cfg: Config, y_test_series: pd.Series, y_pred_raw: np.ndarray
     plt.close()
 
 def plot_metrics(cfg: Config, metrics: dict):
-    """Plot final metrics: Table 1 (MAE, RMSE, MAPE)."""
+    """Plot final metrics: Table 1 (MAE, RMSE)."""
     print("   Generating metrics visualization...")
 
     mae = metrics['mae']
     rmse = metrics['rmse']
-    mape = metrics['mape']
 
     # Metrics bar chart
     fig, ax = plt.subplots(figsize=(10, 5))
-    metrics_names = ['MAE\n($)', 'RMSE\n($)', 'MAPE\n(%)']
-    metrics_values = [mae, rmse, mape]
+    metrics_names = ['MAE\n($)', 'RMSE\n($)']
+    metrics_values = [mae, rmse]
     colors = ['#3498db', '#e74c3c', '#2ecc71']
 
     bars = ax.bar(metrics_names, metrics_values, color=colors, alpha=0.7,
@@ -375,8 +375,7 @@ def plot_metrics(cfg: Config, metrics: dict):
     table_data = [
         ['Metric', 'Value', 'Interpretation'],
         ['MAE', f'${mae:.2f}', f'Average absolute error per day'],
-        ['RMSE', f'${rmse:.2f}', f'Root Mean Squared Error (penalizes large errors)'],
-        ['MAPE', f'{mape:.2f}%', f'Mean Absolute Percentage Error'],
+        ['RMSE', f'${rmse:.2f}', f'Root Mean Squared Error (penalizes large errors)']
     ]
 
     table = ax.table(cellText=table_data, cellLoc='left', loc='center',
@@ -415,6 +414,8 @@ def main():
     daily = load_preprocessed_daily(cfg)
     print(f"   ✓ Loaded {len(daily)} days of data")
     print(f"   Date range: {daily.index.min().date()} to {daily.index.max().date()}")
+    n_zeros = (daily["y"] == 0).sum()
+    print(f"   ✓ Zeros count in dataseries: {n_zeros} ({n_zeros / len(daily) * 100:.2f}%)")
 
     print("\n2) Exploratory Data Analysis (EDA):")
     print(f"   Mean daily expense: ${daily['y'].mean():.2f}")
@@ -486,7 +487,6 @@ def main():
     metrics = compute_metrics(y_test_full_series.values, y_pred_full_series.values)
     print(f"   ✓ MAE: ${metrics['mae']:.2f}")
     print(f"   ✓ RMSE: ${metrics['rmse']:.2f}")
-    print(f"   ✓ MAPE: {metrics['mape']:.2f}%")
 
     # predictions table (full test)
     predictions_df = pd.DataFrame(
