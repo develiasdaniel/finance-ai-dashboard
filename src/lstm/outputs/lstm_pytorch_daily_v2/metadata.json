@@ -1,0 +1,34 @@
+{
+  "csv_path": "../data/lstm_daily_dataset.csv",
+  "n_total_points": 3589,
+  "n_train_seq": 2860,
+  "n_test_seq": 715,
+  "n_visualization_window": 20,
+  "train_ratio": 0.8,
+  "lookback": 14,
+  "data_stats": {
+    "mean_daily_expense": 406.8450264697687,
+    "max_daily_expense": 3289.15,
+    "min_daily_expense": -471.97,
+    "std_daily_expense": 199.54761594910272
+  },
+  "clip_outliers": true,
+  "clip_info": {
+    "q_low_value": 41.71440000000001,
+    "q_high_value": 713.62
+  },
+  "hyperparameters": {
+    "lstm_units": 64,
+    "n_lstm_layers": 1,
+    "dense_units": 32,
+    "dropout_rate": 0.2,
+    "batch_size": 16,
+    "epochs": 200,
+    "learning_rate": 0.001
+  },
+  "metrics_evaluated_on": "full_test_set",
+  "metrics": {
+    "mae": 144.44868471570422,
+    "rmse": 177.4264080982478
+  }
+}
