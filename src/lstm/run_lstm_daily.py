@@ -26,8 +26,8 @@ warnings.filterwarnings("ignore")
 class Config:
     output_dir: str = "outputs/lstm_pytorch_daily_v2"
     plots_dir: str = "outputs/lstm_pytorch_daily_v2/plots"
-    #csv_path: str = "../data/lstm_daily_dataset_86.csv"
-    csv_path: str = "../data/lstm_daily_dataset.csv"
+    csv_path: str = "../data/lstm_daily_dataset_86.csv"
+    #csv_path: str = "../data/lstm_daily_dataset.csv"
 
     date_col: str = "date_day"
     client_col: str = "client_id"
@@ -39,14 +39,14 @@ class Config:
         "day_of_week", "is_weekend", "month", "day_of_month"
     ]
 
-    client_id: int = 1098
-    #client_id: int = 86
+    #client_id: int = 1098
+    client_id: int = 86
 
     # split
     train_ratio: float = 0.8
 
     # evaluation: last N days
-    n_days_eval: int = 7
+    n_days_eval: int = 20
 
     # outlier handling
     clip_outliers: bool = True
@@ -264,11 +264,7 @@ def predict(model, X_test, device):
 def compute_metrics(y_true: np.ndarray, y_pred: np.ndarray):
     mae = mean_absolute_error(y_true, y_pred)
     rmse = np.sqrt(mean_squared_error(y_true, y_pred))
-
-    eps = 1e-8
-    mape = np.mean(np.abs((y_true - y_pred) / np.maximum(np.abs(y_true), eps))) * 100.0
-
-    return {"mae": float(mae), "rmse": float(rmse), "mape": float(mape)}
+    return {"mae": float(mae), "rmse": float(rmse)}
 
 
 
@@ -425,12 +421,12 @@ def plot_residuals(cfg: Config, y_test_series: pd.Series, y_pred_raw: np.ndarray
 
 def plot_metrics(cfg: Config, metrics: dict):
     print("   Generating metrics visualization...")
-    mae, rmse, mape = metrics['mae'], metrics['rmse'], metrics['mape']
+    mae, rmse = metrics['mae'], metrics['rmse']
 
     # Metrics bar chart
     fig, ax = plt.subplots(figsize=(10, 5))
-    metrics_names = ['MAE\n($)', 'RMSE\n($)', 'MAPE\n(%)']
-    metrics_values = [mae, rmse, mape]
+    metrics_names = ['MAE\n($)', 'RMSE\n($)']
+    metrics_values = [mae, rmse]
     colors = ['#3498db', '#e74c3c', '#2ecc71']
 
     bars = ax.bar(metrics_names, metrics_values, color=colors, alpha=0.7, edgecolor='black', linewidth=2)
@@ -457,7 +453,6 @@ def plot_metrics(cfg: Config, metrics: dict):
         ['Metric', 'Value', 'Interpretation'],
         ['MAE', f'${mae:.2f}', f'Average absolute error per day'],
         ['RMSE', f'${rmse:.2f}', f'Root Mean Squared Error (penalizes large errors)'],
-        ['MAPE', f'{mape:.2f}%', f'Mean Absolute Percentage Error'],
     ]
 
     table = ax.table(cellText=table_data, cellLoc='left', loc='center', colWidths=[0.15, 0.15, 0.7])
@@ -569,7 +564,6 @@ def main():
     metrics = compute_metrics(y_test_full_series.values, y_pred_full_series.values)
     print(f"   ✓ MAE: ${metrics['mae']:.2f}")
     print(f"   ✓ RMSE: ${metrics['rmse']:.2f}")
-    print(f"   ✓ MAPE: {metrics['mape']:.2f}%")
 
     predictions_df = pd.DataFrame({
         "date": dates_test.astype(str),
