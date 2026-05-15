@@ -247,7 +247,7 @@ def train_lstm(model, train_loader, val_loader, cfg: Config, device):
                     model.load_state_dict(best_state)
                     break
 
-    print(f"   ✓ Trained for {len(train_losses)} epochs")
+    print(f"   - Trained for {len(train_losses)} epochs")
 
     history = {'loss': train_losses, 'val_loss': val_losses}
     return history
@@ -319,7 +319,7 @@ def plot_eda(cfg: Config, y_raw: pd.Series):
     plt.tight_layout()
     plt.savefig(os.path.join(cfg.plots_dir, "00_eda_boxplot.png"), dpi=150)
     plt.close()
-    print("     ✓ 00_eda_boxplot.png")
+    print("     - 00_eda_boxplot.png")
 
 
 def plot_series_with_split(cfg: Config, y_raw_series: pd.Series, split_idx: int):
@@ -336,7 +336,7 @@ def plot_series_with_split(cfg: Config, y_raw_series: pd.Series, split_idx: int)
     plt.tight_layout()
     plt.savefig(os.path.join(cfg.plots_dir, "01_series_with_split.png"), dpi=150, bbox_inches="tight")
     plt.close()
-    print("     ✓ 01_series_with_split.png")
+    print("     - 01_series_with_split.png")
 
 
 def plot_training_history(cfg: Config, history: dict):
@@ -351,7 +351,7 @@ def plot_training_history(cfg: Config, history: dict):
     plt.tight_layout()
     plt.savefig(os.path.join(cfg.plots_dir, "01b_training_history.png"), dpi=150, bbox_inches="tight")
     plt.close()
-    print("     ✓ 01b_training_history.png")
+    print("     - 01b_training_history.png")
 
 
 def plot_forecast_vs_actual(cfg: Config, y_test_series: pd.Series, y_pred_raw: np.ndarray,
@@ -380,10 +380,10 @@ def plot_forecast_vs_actual(cfg: Config, y_test_series: pd.Series, y_pred_raw: n
 
     if y_test_eval_series is not None:
         plt.savefig(os.path.join(cfg.plots_dir, "02_forecast_vs_actual_7days.png"), dpi=150, bbox_inches="tight")
-        print("     ✓ 02_forecast_vs_actual_7days.png (zoomed view)")
+        print("     - 02_forecast_vs_actual_7days.png (zoomed view)")
     else:
         plt.savefig(os.path.join(cfg.plots_dir, "02_forecast_vs_actual_full.png"), dpi=150, bbox_inches="tight")
-        print("     ✓ 02_forecast_vs_actual_full.png (full test)")
+        print("     - 02_forecast_vs_actual_full.png (full test)")
     plt.close()
 
 
@@ -412,10 +412,10 @@ def plot_residuals(cfg: Config, y_test_series: pd.Series, y_pred_raw: np.ndarray
 
     if y_test_eval_series is not None:
         plt.savefig(os.path.join(cfg.plots_dir, "03_residuals_7days.png"), dpi=150, bbox_inches="tight")
-        print("     ✓ 03_residuals_7days.png (zoomed view)")
+        print("     - 03_residuals_7days.png (zoomed view)")
     else:
         plt.savefig(os.path.join(cfg.plots_dir, "03_residuals_full.png"), dpi=150, bbox_inches="tight")
-        print("     ✓ 03_residuals_full.png (full test)")
+        print("     - 03_residuals_full.png (full test)")
     plt.close()
 
 
@@ -443,7 +443,7 @@ def plot_metrics(cfg: Config, metrics: dict):
     plt.tight_layout()
     plt.savefig(os.path.join(cfg.plots_dir, "04_metrics_bar_chart.png"), dpi=150, bbox_inches="tight")
     plt.close()
-    print("     ✓ 04_metrics_bar_chart.png")
+    print("     - 04_metrics_bar_chart.png")
 
     # Metrics summary table
     fig, ax = plt.subplots(figsize=(10, 4))
@@ -472,7 +472,7 @@ def plot_metrics(cfg: Config, metrics: dict):
     plt.tight_layout()
     plt.savefig(os.path.join(cfg.plots_dir, "05_metrics_table.png"), dpi=150, bbox_inches="tight")
     plt.close()
-    print("     ✓ 05_metrics_table.png")
+    print("     - 05_metrics_table.png")
 
 
 def main():
@@ -486,10 +486,10 @@ def main():
 
     print("1) Loading preprocessed daily data...")
     df = load_preprocessed_daily(cfg)
-    print(f"   ✓ Loaded {len(df)} days of data | Client: {cfg.client_id}")
+    print(f"   - Loaded {len(df)} days of data | Client: {cfg.client_id}")
     print(f"   Date range: {df[cfg.date_col].min().date()} to {df[cfg.date_col].max().date()}")
     n_zeros = (df[cfg.target_col] == 0).sum()
-    print(f"   ✓ Zeros count in dataseries: {n_zeros} ({n_zeros / len(df) * 100:.2f}%)")
+    print(f"   - Zeros count in dataseries: {n_zeros} ({n_zeros / len(df) * 100:.2f}%)")
 
     # Create a Pandas Series mapped to dates for ARIMA-like plotting
     y_raw_series = df.set_index(cfg.date_col)[cfg.target_col].copy()
@@ -503,7 +503,7 @@ def main():
 
     print("\n3) Preprocessing target (clip)...")
     df, clip_info = preprocess_target(df, cfg)
-    print(f"   ✓ Clipping: q_low=${clip_info['q_low_value']:.2f}, q_high=${clip_info['q_high_value']:.2f}")
+    print(f"   - Clipping: q_low=${clip_info['q_low_value']:.2f}, q_high=${clip_info['q_high_value']:.2f}")
 
     print("\n4) Scaling and Temporal split...")
     features_scaled, target_scaled, f_scaler, t_scaler, split_idx = scale_data(df, cfg)
@@ -515,8 +515,8 @@ def main():
     X_train, y_train_seq = X[:n_train_seq], y[:n_train_seq]
     X_test, y_test_seq = X[n_train_seq:], y[n_train_seq:]
 
-    print(f"   ✓ Train: {len(y_train_seq)} sequences ({cfg.train_ratio * 100:.0f}%)")
-    print(f"   ✓ Test: {len(y_test_seq)} sequences ({(1 - cfg.train_ratio) * 100:.0f}%)")
+    print(f"   - Train: {len(y_train_seq)} sequences ({cfg.train_ratio * 100:.0f}%)")
+    print(f"   - Test: {len(y_test_seq)} sequences ({(1 - cfg.train_ratio) * 100:.0f}%)")
 
     # Tensors
     X_train_tensor = torch.FloatTensor(X_train)
@@ -562,8 +562,8 @@ def main():
     y_test_eval_series = y_test_full_series.iloc[-cfg.n_days_eval:]
 
     metrics = compute_metrics(y_test_full_series.values, y_pred_full_series.values)
-    print(f"   ✓ MAE: ${metrics['mae']:.2f}")
-    print(f"   ✓ RMSE: ${metrics['rmse']:.2f}")
+    print(f"   - MAE: ${metrics['mae']:.2f}")
+    print(f"   - RMSE: ${metrics['rmse']:.2f}")
 
     predictions_df = pd.DataFrame({
         "date": dates_test.astype(str),
