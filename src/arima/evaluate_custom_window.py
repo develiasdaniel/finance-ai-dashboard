@@ -68,7 +68,7 @@ def plot_forecast_vs_actual(y_test_series: pd.Series, y_pred_raw: np.ndarray, n_
     plt.savefig(os.path.join(PLOTS_DIR, f"01_forecast_vs_actual_{n_days}days.png"),
                 dpi=150, bbox_inches="tight")
     plt.close()
-    print(f"   ✓ 01_forecast_vs_actual_{n_days}days.png")
+    print(f"   - 01_forecast_vs_actual_{n_days}days.png")
 
 
 def plot_residuals(y_test_series: pd.Series, y_pred_raw: np.ndarray, n_days: int):
@@ -88,7 +88,7 @@ def plot_residuals(y_test_series: pd.Series, y_pred_raw: np.ndarray, n_days: int
     plt.savefig(os.path.join(PLOTS_DIR, f"02_residuals_{n_days}days.png"),
                 dpi=150, bbox_inches="tight")
     plt.close()
-    print(f"   ✓ 02_residuals_{n_days}days.png")
+    print(f"   - 02_residuals_{n_days}days.png")
 
 
 def plot_metrics(metrics: dict, n_days: int):
@@ -119,7 +119,7 @@ def plot_metrics(metrics: dict, n_days: int):
     plt.savefig(os.path.join(PLOTS_DIR, f"03_metrics_{n_days}days.png"),
                 dpi=150, bbox_inches="tight")
     plt.close()
-    print(f"   ✓ 03_metrics_{n_days}days.png")
+    print(f"   - 03_metrics_{n_days}days.png")
 
 
 def main():
@@ -134,21 +134,21 @@ def main():
     with open(METADATA_PATH) as f:
         metadata = json.load(f)
 
-    print(f"   ✓ Model: ARIMA{metadata['selected_order']}")
-    print(f"   ✓ Seasonal: SARIMA{metadata['selected_seasonal_order']}")
+    print(f"   - Model: ARIMA{metadata['selected_order']}")
+    print(f"   - Seasonal: SARIMA{metadata['selected_seasonal_order']}")
 
     # Load predictions
     print(f"\n2) Loading predictions from CSV...")
     predictions_df = pd.read_csv(PREDICTIONS_PATH)
     predictions_df['date'] = pd.to_datetime(predictions_df['date'])
 
-    print(f"   ✓ Loaded {len(predictions_df)} predictions")
+    print(f"   - Loaded {len(predictions_df)} predictions")
 
     # Extract last N days
     print(f"\n3) Extracting last {N_DAYS_EVAL} days from test set...")
     predictions_eval = predictions_df.iloc[-N_DAYS_EVAL:].copy()
 
-    print(f"   ✓ Date range: {predictions_eval['date'].min().date()} to {predictions_eval['date'].max().date()}")
+    print(f"   - Date range: {predictions_eval['date'].min().date()} to {predictions_eval['date'].max().date()}")
 
     # Convert to Series
     y_test_series = pd.Series(
@@ -161,9 +161,9 @@ def main():
     # Compute metrics
     print(f"\n4) Evaluating metrics on {N_DAYS_EVAL} days...")
     metrics = compute_metrics(y_test_series.values, y_pred_raw)
-    print(f"   ✓ MAE: ${metrics['mae']:.2f}")
-    print(f"   ✓ RMSE: ${metrics['rmse']:.2f}")
-    print(f"   ✓ MAPE: {metrics['mape']:.2f}%")
+    print(f"   - MAE: ${metrics['mae']:.2f}")
+    print(f"   - RMSE: ${metrics['rmse']:.2f}")
+    print(f"   - MAPE: {metrics['mape']:.2f}%")
 
     # Save metrics
     print(f"\n5) Saving results...")
@@ -174,12 +174,12 @@ def main():
             "date_range": f"{predictions_eval['date'].min().date()} to {predictions_eval['date'].max().date()}",
             "metrics": metrics
         }, f, indent=2)
-    print(f"   ✓ Metrics saved: {metrics_path}")
+    print(f"   - Metrics saved: {metrics_path}")
 
     # Save predictions
     preds_path = os.path.join(OUTPUT_DIR, f"predictions_{N_DAYS_EVAL}days.csv")
     predictions_eval.to_csv(preds_path, index=False)
-    print(f"   ✓ Predictions saved: {preds_path}")
+    print(f"   - Predictions saved: {preds_path}")
 
     # Plot
     print(f"\n6) Generating plots...")

@@ -217,7 +217,7 @@ def plot_eda(cfg: Config, y_raw: pd.Series):
     plt.savefig(os.path.join(cfg.plots_dir, "00_eda_boxplot.png"), dpi=150)
     plt.close()
 
-    print("     ✓ 00_eda_boxplot.png")
+    print("     - 00_eda_boxplot.png")
 
 
 def plot_series_with_split(cfg: Config, y_raw: pd.Series, split_idx: int):
@@ -237,7 +237,7 @@ def plot_series_with_split(cfg: Config, y_raw: pd.Series, split_idx: int):
     plt.savefig(os.path.join(cfg.plots_dir, "01_series_with_split.png"),
                 dpi=150, bbox_inches="tight")
     plt.close()
-    print("     ✓ 01_series_with_split.png")
+    print("     - 01_series_with_split.png")
 
 
 def plot_forecast_vs_actual(cfg: Config, y_test_series: pd.Series, y_pred_raw: np.ndarray,
@@ -288,11 +288,11 @@ def plot_forecast_vs_actual(cfg: Config, y_test_series: pd.Series, y_pred_raw: n
     if y_test_eval_series is not None:
         plt.savefig(os.path.join(cfg.plots_dir, "02_forecast_vs_actual_7days.png"),
                     dpi=150, bbox_inches="tight")
-        print("     ✓ 02_forecast_vs_actual_7days.png (zoomed view)")
+        print("     - 02_forecast_vs_actual_7days.png (zoomed view)")
     else:
         plt.savefig(os.path.join(cfg.plots_dir, "02_forecast_vs_actual_full.png"),
                     dpi=150, bbox_inches="tight")
-        print("     ✓ 02_forecast_vs_actual_full.png (full test)")
+        print("     - 02_forecast_vs_actual_full.png (full test)")
     plt.close()
 
 
@@ -328,11 +328,11 @@ def plot_residuals(cfg: Config, y_test_series: pd.Series, y_pred_raw: np.ndarray
     if y_test_eval_series is not None:
         plt.savefig(os.path.join(cfg.plots_dir, "03_residuals_7days.png"),
                     dpi=150, bbox_inches="tight")
-        print("     ✓ 03_residuals_7days.png (zoomed view)")
+        print("     - 03_residuals_7days.png (zoomed view)")
     else:
         plt.savefig(os.path.join(cfg.plots_dir, "03_residuals_full.png"),
                     dpi=150, bbox_inches="tight")
-        print("     ✓ 03_residuals_full.png (full test)")
+        print("     - 03_residuals_full.png (full test)")
     plt.close()
 
 def plot_metrics(cfg: Config, metrics: dict):
@@ -366,7 +366,7 @@ def plot_metrics(cfg: Config, metrics: dict):
     plt.savefig(os.path.join(cfg.plots_dir, "04_metrics_bar_chart.png"),
                 dpi=150, bbox_inches="tight")
     plt.close()
-    print("     ✓ 04_metrics_bar_chart.png")
+    print("     - 04_metrics_bar_chart.png")
 
     # Metrics summary table
     fig, ax = plt.subplots(figsize=(10, 4))
@@ -399,7 +399,7 @@ def plot_metrics(cfg: Config, metrics: dict):
     plt.savefig(os.path.join(cfg.plots_dir, "05_metrics_table.png"),
                 dpi=150, bbox_inches="tight")
     plt.close()
-    print("     ✓ 05_metrics_table.png")
+    print("     - 05_metrics_table.png")
 
 
 def main():
@@ -412,10 +412,10 @@ def main():
 
     print("1) Loading preprocessed daily data...")
     daily = load_preprocessed_daily(cfg)
-    print(f"   ✓ Loaded {len(daily)} days of data")
+    print(f"   - Loaded {len(daily)} days of data")
     print(f"   Date range: {daily.index.min().date()} to {daily.index.max().date()}")
     n_zeros = (daily["y"] == 0).sum()
-    print(f"   ✓ Zeros count in dataseries: {n_zeros} ({n_zeros / len(daily) * 100:.2f}%)")
+    print(f"   - Zeros count in dataseries: {n_zeros} ({n_zeros / len(daily) * 100:.2f}%)")
 
     print("\n2) Exploratory Data Analysis (EDA):")
     print(f"   Mean daily expense: ${daily['y'].mean():.2f}")
@@ -426,8 +426,8 @@ def main():
 
     print("\n3) Preprocessing target (clip/log)...")
     y_raw, y_model, clip_info = preprocess_target(daily, cfg)
-    print(f"   ✓ Clipping: q_low=${clip_info['q_low_value']:.2f}, q_high=${clip_info['q_high_value']:.2f}")
-    print(f"   ✓ Log1p transform applied: {cfg.use_log1p}")
+    print(f"   - Clipping: q_low=${clip_info['q_low_value']:.2f}, q_high=${clip_info['q_high_value']:.2f}")
+    print(f"   - Log1p transform applied: {cfg.use_log1p}")
 
     print("\n4) Temporal split (80% train / 20% test)...")
     n = len(y_model)
@@ -436,13 +436,13 @@ def main():
     y_train = y_model.iloc[:split_idx].copy()
     y_test_full = y_model.iloc[split_idx:].copy()
 
-    print(f"   ✓ Train: {len(y_train)} days ({cfg.train_ratio * 100:.0f}%)")
-    print(f"   ✓ Test: {len(y_test_full)} days ({(1 - cfg.train_ratio) * 100:.0f}%)")
+    print(f"   - Train: {len(y_train)} days ({cfg.train_ratio * 100:.0f}%)")
+    print(f"   - Test: {len(y_test_full)} days ({(1 - cfg.train_ratio) * 100:.0f}%)")
 
     # Evaluation subset: last 7 days for visualization
     y_test_eval = y_test_full.iloc[-cfg.n_days_eval:]
-    print(f"   ✓ Evaluation window: last {cfg.n_days_eval} days (for visualization)")
-    print(f"   ✓ Eval date range: {y_test_eval.index.min().date()} to {y_test_eval.index.max().date()}")
+    print(f"   - Evaluation window: last {cfg.n_days_eval} days (for visualization)")
+    print(f"   - Eval date range: {y_test_eval.index.min().date()} to {y_test_eval.index.max().date()}")
 
     print("\n5) Training ARIMA/SARIMA with auto_arima...")
     model = auto_arima(
@@ -466,9 +466,9 @@ def main():
         information_criterion="aic",
     )
 
-    print(f"   ✓ Selected ARIMA order: {model.order}")
-    print(f"   ✓ Selected Seasonal order: {model.seasonal_order}")
-    print(f"   ✓ AIC: {model.aic():.2f}")
+    print(f"   - Selected ARIMA order: {model.order}")
+    print(f"   - Selected Seasonal order: {model.seasonal_order}")
+    print(f"   - AIC: {model.aic():.2f}")
 
     print("\n6) Rolling forecast (1-step) on FULL TEST SET...")
     y_pred_raw = rolling_forecast_1step(model, y_test_full, cfg)
@@ -485,8 +485,8 @@ def main():
 
     print("\n7) Evaluating metrics on FULL TEST SET (20%)...")
     metrics = compute_metrics(y_test_full_series.values, y_pred_full_series.values)
-    print(f"   ✓ MAE: ${metrics['mae']:.2f}")
-    print(f"   ✓ RMSE: ${metrics['rmse']:.2f}")
+    print(f"   - MAE: ${metrics['mae']:.2f}")
+    print(f"   - RMSE: ${metrics['rmse']:.2f}")
 
     # predictions table (full test)
     predictions_df = pd.DataFrame(
