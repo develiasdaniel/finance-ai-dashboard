@@ -26,8 +26,8 @@ warnings.filterwarnings("ignore")
 class Config:
     output_dir: str = "outputs/lstm_pytorch_daily_v2"
     plots_dir: str = "outputs/lstm_pytorch_daily_v2/plots"
-    csv_path: str = "../data/lstm_daily_dataset_86.csv"
-    #csv_path: str = "../data/lstm_daily_dataset.csv"
+    #csv_path: str = "../data/lstm_daily_dataset_86.csv"
+    csv_path: str = "../data/lstm_daily_dataset.csv"
 
     date_col: str = "date_day"
     client_col: str = "client_id"
@@ -39,8 +39,8 @@ class Config:
         "day_of_week", "is_weekend", "month", "day_of_month"
     ]
 
-    #client_id: int = 1098
-    client_id: int = 86
+    client_id: int = 1098
+    #client_id: int = 86
 
     # split
     train_ratio: float = 0.8
@@ -57,16 +57,16 @@ class Config:
     lookback: int = 14  # Use last 14 days to predict next day
 
     # ========== HYPERPARAMETERS TO EXPERIMENT ==========
-    lstm_units: int = 64  # Try: 32, 64, 128, 256
-    n_lstm_layers: int = 1  # Try: 1, 2, 3
-    dense_units: int = 32  # Try: 16, 32, 64
-    dropout_rate: float = 0.2  # Try: 0.1, 0.2, 0.3, 0.5
+    lstm_units: int = 128  # Try: 32, 64, 128, 256
+    n_lstm_layers: int = 3  # Try: 1, 2, 3
+    dense_units: int = 64  # Try: 16, 32, 64
+    dropout_rate: float = 0.1  # Try: 0.1, 0.2, 0.3, 0.5
     use_dropout: bool = True
 
     # Training
-    batch_size: int = 32  # Try: 16, 32, 64
-    epochs: int = 100  # Try: 50, 100, 200
-    learning_rate: float = 0.001  # Try: 0.001, 0.0001, 0.01
+    batch_size: int = 16  # Try: 16, 32, 64
+    epochs: int = 200  # Try: 50, 100, 200
+    learning_rate: float = 0.0001  # Try: 0.001, 0.0001, 0.01
 
     # Early stopping
     early_stopping: bool = True
