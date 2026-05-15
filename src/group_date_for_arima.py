@@ -4,7 +4,8 @@ import pandas as pd
 transactions = pd.read_csv("data/transactions_data.csv")
 
 # ---- filter for ONE user ----
-user_id = 1428
+#user_id = 1428
+user_id = 86
 transactions = transactions[transactions["client_id"] == user_id].copy()
 
 print("Rows for this user:", len(transactions))

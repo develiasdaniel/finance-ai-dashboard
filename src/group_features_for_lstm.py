@@ -4,9 +4,11 @@ import pandas as pd
 transactions = pd.read_csv("data/transactions_data.csv")
 
 # Keep only selected clients
-selected_clients = [1428, 1439, 473, 397, 517, 897, 618, 1494, 955, 1744]
+#selected_clients = [1428, 1439, 473, 397, 517, 897, 618, 1494, 955, 1744]
 #selected_clients = [1428]
-selected_clients = [1098]
+#selected_clients = [1098]
+client_id = 1428
+selected_clients = [client_id]
 transactions = transactions[transactions["client_id"].isin(selected_clients)].copy()
 
 # Clean amount
@@ -44,5 +46,5 @@ daily["month"] = daily["date_day"].dt.month
 daily["day_of_month"] = daily["date_day"].dt.day
 
 # Save dataset
-daily.to_csv("data/lstm_daily_dataset.csv", index=False)
+daily.to_csv(f"data/lstm_daily_dataset_{client_id}.csv", index=False)
 print("Saved lstm_daily_dataset.csv with shape:", daily.shape)

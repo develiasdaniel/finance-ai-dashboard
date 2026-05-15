@@ -1,0 +1,44 @@
+{
+  "csv_path": "../data/lstm_daily_dataset.csv",
+  "clients": [
+    1428,
+    1098,
+    180,
+    86
+  ],
+  "feature_cols": [
+    "tx_count",
+    "unique_mcc",
+    "unique_merchants",
+    "online_ratio",
+    "chip_ratio",
+    "day_of_week",
+    "is_weekend",
+    "month",
+    "day_of_month",
+    "client_id_raw",
+    "client_id_86",
+    "client_id_180",
+    "client_id_1098",
+    "client_id_1428"
+  ],
+  "lookback": 14,
+  "clip_outliers": true,
+  "clip_info": {
+    "q_low_value": 3.0416,
+    "q_high_value": 591.6479999999998
+  },
+  "hyperparameters": {
+    "lstm_units": 64,
+    "n_lstm_layers": 1,
+    "dense_units": 32,
+    "dropout_rate": 0.2,
+    "batch_size": 32,
+    "epochs": 100,
+    "learning_rate": 0.001
+  },
+  "metrics": {
+    "mae": 68.5195056783967,
+    "rmse": 101.74629064777127
+  }
+}
