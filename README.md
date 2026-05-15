@@ -1,3 +1,10 @@
+
+---
+
+**Repository link:** [finance-ai-dashboard](https://github.com/develiasdaniel/finance-ai-dashboard)
+
+---
+
 # finance-ai-dashboard
 
 **Intelligent Financial Prediction and Lifestyle Assistant**
